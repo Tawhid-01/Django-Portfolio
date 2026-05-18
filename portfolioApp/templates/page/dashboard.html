@@ -1,0 +1,119 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+    <h2>Your Portfolio Dashboard</h2>
+    <div class="btn-group">
+        <a href="{% url 'personalInfo' %}" class="btn btn-sm btn-outline-primary">Update Bio</a>
+        <a href="{% url 'workExperience' %}" class="btn btn-sm btn-outline-primary">+ Add Experience</a>
+        <a href="{% url 'education' %}" class="btn btn-sm btn-outline-primary">+ Add Education</a>
+        <a href="{% url 'project' %}" class="btn btn-sm btn-outline-primary">+ Add Project</a>
+        <a href="{% url 'technical' %}" class="btn btn-sm btn-outline-primary">+ Add Skill</a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Left Column: Profile & Skills -->
+    <div class="col-md-4">
+        <!-- Personal Info Section -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body text-center">
+                {% if info.first.image %}
+                    <img src="{{ info.first.image.url }}" class="rounded-circle img-thumbnail mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                {% endif %}
+                <h4>{{ info.first.name|default:"Your Name" }}</h4>
+                <p class="text-muted mb-1">{{ info.first.profession|default:"Profession not added" }}</p>
+                <small class="text-muted d-block">{{ info.first.phone }}</small>
+                <hr>
+                <p class="card-text text-start"><strong>Bio:</strong> {{ info.first.short_bio }}</p>
+            </div>
+        </div>
+
+        <!-- Technical Skills Section -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-light"><strong>Technical Skills</strong></div>
+            <div class="card-body">
+                {% for skill in technical %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>{{ skill.skill_name }}</span>
+                            <small class="text-muted">{{ skill.level }}%</small>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ skill.level }}%"></div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted my-0">No skills added yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Experience, Education, Projects -->
+    <div class="col-md-8">
+        <!-- Experience -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-light"><h4>Work Experience</h4></div>
+            <div class="card-body">
+                {% for item in work %}
+                    <div class="mb-3 border-bottom pb-2">
+                        <h5>{{ item.position }} <span class="text-muted">at</span> {{ item.company_name }}</h5>
+                        <p class="text-muted small mb-1">{{ item.start_date }} - {{ item.end_date }}</p>
+                        <p>{{ item.achivements }}</p>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No experience entries found.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-light"><h4>Education</h4></div>
+            <div class="card-body">
+                {% for item in edu %}
+                    <div class="mb-2 border-bottom pb-2">
+                        <h5>{{ item.degree }}</h5>
+                        <p class="mb-1">{{ item.institution_name }}</p>
+                        <small class="text-muted">Result: {{ item.result }} | Passing Year: {{ item.passing_year }}</small>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No education records found.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-light"><h4>Projects</h4></div>
+            <div class="card-body">
+                <div class="row">
+                    {% for item in project %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                {% if item.image %}
+                                    <img src="{{ item.image.url }}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ item.title }}</h5>
+                                    <p class="card-text small">{{ item.description|truncatewords:20 }}</p>
+                                    <span class="badge bg-secondary mb-2">{{ item.technologies_used }}</span>
+                                </div>
+                                <div class="card-footer bg-transparent border-0 d-flex gap-2">
+                                    {% if item.github_link %}<a href="{{ item.github_link }}" class="btn btn-xs btn-dark w-100">GitHub</a>{% endif %}
+                                    {% if item.live_demo_link %}<a href="{{ item.live_demo_link }}" class="btn btn-xs btn-primary w-100">Live</a>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted px-3">No projects added yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
