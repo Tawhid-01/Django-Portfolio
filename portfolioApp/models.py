@@ -19,10 +19,11 @@ class PersonalInfoModel(models.Model):
     image = models.ImageField(upload_to='media/profile',null=True)
 
     def __str__(self):
-        return self.name
+        return self.name or 'none'
     
 
 class WorkExperienceModel(models.Model):
+
     company_name = models.CharField(max_length=100,null=True)
     position = models.CharField(max_length=100,null=True)
     start_date = models.DateField(null=True)
@@ -33,6 +34,7 @@ class WorkExperienceModel(models.Model):
         return self.company_name
     
 class EducationModel(models.Model):
+
     institution_name = models.CharField(max_length=100,null=True)
     degree = models.CharField(max_length=100,null=True)
     result = models.FloatField(null=True)
@@ -56,6 +58,7 @@ class ProjectModel(models.Model):
         return self.title
     
 class TechnicalModel(models.Model):
+  
     skill_name= models.CharField(null=True, max_length=50)    
     description = models.TextField(null=True)
     level = models.FloatField(null=True)

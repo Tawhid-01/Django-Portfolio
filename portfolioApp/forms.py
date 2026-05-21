@@ -11,8 +11,8 @@ class UserRegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        for i_name in self.fields:
-            self.fields[i_name].widget.attrs['class'] = 'form-control'
+        for i_name, i in self.fields.items():
+            i.widget.attrs['class'] = 'form-control'
 
 class UserLoginForm(AuthenticationForm):
     class Meta:
@@ -23,8 +23,8 @@ class UserLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        for i_name in self.fields:
-            self.fields[i_name].widget.attrs['class'] = 'form-control'
+        for i_name, i in self.fields.items():
+            i.widget.attrs['class'] = 'form-control'
 
 class PersonalInfoForm(forms.ModelForm):
     class Meta:
@@ -35,43 +35,45 @@ class PersonalInfoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        for i_name in self.fields:
-            self.fields[i_name].widget.attrs['class'] = 'form-control'
+        for i_name, i in self.fields.items():
+            i.widget.attrs['class'] = 'form-control'
 
 class WorkExperienceForm(forms.ModelForm):
     class Meta:
         model = WorkExperienceModel
         fields = "__all__"
+     
         
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        for i_name in self.fields:
-            self.fields[i_name].widget.attrs['class'] = 'form-control'
+        for i_name, i in self.fields.items():
+            i.widget.attrs['class'] = 'form-control'
 
 class EducationForm(forms.ModelForm):
     class Meta:
         model = EducationModel
         fields = "__all__"
+
        
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        for i_name in self.fields:
-            self.fields[i_name].widget.attrs['class'] = 'form-control'
+        for i_name, i in self.fields.items():
+            i.widget.attrs['class'] = 'form-control'
 
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = ProjectModel
         fields = "__all__"
-    
+     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        for i_name in self.fields:
-            self.fields[i_name].widget.attrs['class'] = 'form-control'
+        for i_name, i in self.fields.items():
+            i.widget.attrs['class'] = 'form-control'
 
 
 
@@ -79,9 +81,10 @@ class TechnicalForm(forms.ModelForm):
     class Meta:
         model = TechnicalModel
         fields = "__all__"
+   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        for i_name in self.fields:
-            self.fields[i_name].widget.attrs['class'] = 'form-control'
+        for i_name, i in self.fields.items():
+            i.widget.attrs['class'] = 'form-control'

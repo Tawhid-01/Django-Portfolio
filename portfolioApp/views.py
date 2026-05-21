@@ -4,7 +4,7 @@ from .models import *
 from django.contrib.auth import login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+from django.http import HttpResponse
 # Create your views here.
 
 def registerPage(req):
@@ -40,22 +40,34 @@ def loginPage(req):
     }
     return render(req,'base/baseAuthForm.html',context)
 
+def logoutPage(req):
+    logout(req)
+    messages.success(req,"Logout successful.")
+    return redirect('login')
+
+@login_required
 def personalInfoPage(req):
+    try:
+
+        user = PersonalInfoModel.objects.get(user=req.user)
+    except PersonalInfoModel.DoesNotExist:
+        user = PersonalInfoModel.objects.create(user=req.user)
+
     if req.method == "POST":
-        form = PersonalInfoForm(req.POST,req.FILES)
+        form = PersonalInfoForm(req.POST,req.FILES,instance=user)
         if form.is_valid():
             form.save()
             messages.success(req,"PersonalInfo Page  Create successful.")
             return redirect('dashboard')
         
-    form = PersonalInfoForm()
+    form = PersonalInfoForm(instance=user)
     context = {
         'form':form,
         'title':'Personal Info Form',
         'btn':'Create'
     }
     return render(req,'base/baseForm.html',context)
-
+@login_required
 def workExperiencePage(req):
     if req.method == "POST":
         form = WorkExperienceForm(req.POST,req.FILES)
@@ -73,30 +85,29 @@ def workExperiencePage(req):
     }
     return render(req,'base/baseForm.html',context)
 
+@login_required
 def educationPage(req):
     if req.method == "POST":
-        form = EducationForm(req.POST,req.FILES)
+        form = EducationForm(req.POST, req.FILES)
         if form.is_valid():
             form.save()
-            
-            messages.success(req,"Education Page  Create successful.")
+            messages.success(req, "Education Page Create successful.")
             return redirect('dashboard')
         
     form = EducationForm()
     context = {
-        'form':form,
-        'title':'Education Form',
-        'btn':'Create'
+        'form': form,
+        'title': 'Education Form',
+        'btn': 'Create'
     }
-    return render(req,'base/baseForm.html',context)
+    return render(req, 'base/baseForm.html', context)
 
-
+@login_required
 def projectPage(req):
     if req.method == "POST":
         form = ProjectForm(req.POST,req.FILES)
         if form.is_valid():
             form.save()
-           
             messages.success(req,"Project Page  Create successful.")
             return redirect('dashboard')
         
@@ -108,11 +119,13 @@ def projectPage(req):
     }
     return render(req,'base/baseForm.html',context)
 
+@login_required
 def technicalPage(req):
     if req.method == "POST":
         form = TechnicalForm(req.POST,req.FILES)
         if form.is_valid():
             form.save()
+            
             
             messages.success(req,"Technical Page  Create successful.")
             return redirect('dashboard')
@@ -126,8 +139,14 @@ def technicalPage(req):
     return render(req,'base/baseForm.html',context)
 
 
+
 def dashboardPage(req):
-    info = PersonalInfoModel.objects.all()
+    try:
+        info = PersonalInfoModel.objects.get(id=1)
+    except PersonalInfoModel.DoesNotExist:
+        return HttpResponse("Personal info not found.")
+
+        
     work = WorkExperienceModel.objects.all()
     edu = EducationModel.objects.all()
     project = ProjectModel.objects.all()
@@ -137,7 +156,7 @@ def dashboardPage(req):
         'info':info,
         'work':work,
         'edu':edu,
-        'project':project,
+        'projects':project,
         'technical':technical,
     }
     return render(req,'page/dashboard.html',context)
